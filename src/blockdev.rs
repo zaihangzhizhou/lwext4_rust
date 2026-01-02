@@ -18,6 +18,9 @@ pub trait BlockDevice {
 
     /// Gets the number of blocks on the device.
     fn num_blocks(&self) -> Ext4Result<u64>;
+
+    #[cfg(feature = "block-cache")]
+    fn flush_cache(&mut self) -> Ext4Result<()>;
 }
 
 /// Holds necessary resources for the ext4 block device, and automatically frees
@@ -87,6 +90,11 @@ impl<Dev: BlockDevice> Ext4BlockDevice<Dev> {
                 block_dev_iface,
             },
         })
+    }
+
+    #[cfg(feature = "block-cache")]
+    pub fn flush_cache(&mut self) -> Ext4Result<()> {
+        self._guard.dev.flush_cache()
     }
 
     unsafe fn dev_read_fields<'a>(

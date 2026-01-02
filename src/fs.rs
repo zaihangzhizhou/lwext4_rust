@@ -245,6 +245,8 @@ impl<Hal: SystemHal, Dev: BlockDevice> Ext4Filesystem<Hal, Dev> {
     pub fn flush(&mut self) -> Ext4Result<()> {
         unsafe {
             ext4_block_cache_flush(self.bdev.inner.as_mut()).context("ext4_cache_flush")?;
+            #[cfg(feature = "block-cache")]
+            self.bdev.flush_cache()?;
         }
         Ok(())
     }

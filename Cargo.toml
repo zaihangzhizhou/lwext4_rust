@@ -11,8 +11,9 @@ links = "lwext4"
 build = "build.rs"
 
 [features]
-default = ["print", "std"]
+default = ["print", "std", "block-cache"]
 print = ["printf-compat"]
+block-cache = []
 std = []
 
 [dependencies]
